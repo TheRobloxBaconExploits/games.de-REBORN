@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>games.de REBORN</title>
+<style>
+:root {
+  --bg: #050507;
+  --panel: #0b0b0f;
+  --card: #121218;
+  --card-hover: #181822;
+  --edge: #272733;
+  --ink: #f4f4f6;
+  --muted: #8e8ea0;
+  --accent: #ffffff;
+  --accent-ink: #050507;
+  --lcd: #4aa8ff;
+  --danger: #ff6b72;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 Tahoma, Verdana, ui-sans-serif, system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+button, input, textarea { font: inherit; color: var(--ink); }
+button { cursor: pointer; }
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem 1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--edge);
+}
+.brand {
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin-right: .5rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+nav a.tab {
+  color: var(--ink);
+  text-decoration: none;
+  padding: .45rem .9rem;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  font-size: .85rem;
+  transition: border-color .15s, background .15s;
+}
+nav a.tab:hover { border-color: #666; }
+nav a.tab.on {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.view { display: none; flex: 1; }
+.view.on { display: block; }
+
+.hero {
+  text-align: center;
+  background: radial-gradient(circle at top, #121726 0%, var(--panel) 70%);
+  border-bottom: 1px solid var(--edge);
+  padding: 3.2rem 1rem 3rem;
+}
+.hero h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.8rem, 6vw, 3.1rem);
+  line-height: 1.1;
+  text-shadow: 0 0 18px rgba(74, 168, 255, 0.25);
+}
+.visits {
+  color: var(--muted);
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+}
+.lcd {
+  font: 700 1.2rem/1 ui-monospace, Consolas, monospace;
+  letter-spacing: .25em;
+  color: var(--lcd);
+  background: #081522;
+  border: 1px solid #16334f;
+  padding: .3rem .25rem .3rem .55rem;
+  border-radius: 4px;
+}
+
+.section { padding: 1.5rem 1.25rem 3rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+.section h2 { margin: 0 0 1.2rem; font-size: 1.2rem; }
+.grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+.tile {
+  width: 175px;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--ink);
+  text-decoration: none;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition: transform .12s ease, border-color .15s ease, background .15s ease;
+}
+.tile:hover {
+  border-color: var(--lcd);
+  background: var(--card-hover);
+  transform: translateY(-2px);
+}
+.tile .art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 100%;
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.tile .badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ddd;
+  letter-spacing: .04em;
+}
+.tile .cap {
+  display: block;
+  width: 100%;
+  padding: .65rem .6rem;
+  text-align: center;
+  font-size: .84rem;
+  font-weight: 600;
+  border-top: 1px solid var(--edge);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty { color: var(--muted); }
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.tools h2 { margin: 0; }
+input, textarea {
+  background: var(--card);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: .6rem .75rem;
+  width: 100%;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+.tools input { max-width: 18rem; }
+
+form.box { max-width: 34rem; display: grid; gap: .75rem; margin-bottom: 2rem; }
+form.box label { display: grid; gap: .35rem; font-size: .85rem; color: var(--muted); }
+textarea { min-height: 11rem; font: 13px/1.4 ui-monospace, Consolas, monospace; resize: vertical; }
+.btn {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 6px;
+  padding: .6rem 1.1rem;
+  font-weight: 700;
+  justify-self: start;
+}
+.btn:hover { opacity: .9; }
+.ghost {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: .45rem .8rem;
+  font-size: .85rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+}
+.ghost:hover { border-color: #777; background: var(--card-hover); }
+.ghost.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.ghost.primary:hover { opacity: .9; }
+
+.msg { color: var(--lcd); min-height: 1.4em; font-size: .9rem; }
+.msg.err { color: var(--danger); }
+.rows { max-width: 34rem; display: grid; gap: .5rem; }
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: .55rem .6rem .55rem .85rem;
+  background: var(--card);
+}
+.row span { overflow-wrap: anywhere; }
+.row small { color: var(--muted); display: block; font-size: .78rem; }
+.row .ghost:hover { color: var(--danger); border-color: var(--danger); }
+
+/* Discord-style Community Chat Sidebar Overlay (Hidden for now) */
+#chatDrawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: -360px;
+  width: 360px;
+  height: 100vh;
+  background: #111116;
+  border-left: 1px solid var(--edge);
+  z-index: 10000;
+  flex-direction: column;
+  transition: right .25s ease;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.6);
+}
+#chatDrawer.open {
+  right: 0;
+}
+.chat-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--edge);
+  font-weight: 700;
+}
+.chat-channels {
+  display: flex;
+  background: #09090c;
+  padding: .5rem;
+  gap: .4rem;
+  border-bottom: 1px solid var(--edge);
+  font-size: .8rem;
+}
+.ch-btn {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  padding: .3rem .6rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.ch-btn.active {
+  background: var(--card-hover);
+  color: var(--ink);
+}
+.chat-messages-area {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+.chat-msg-item {
+  background: var(--card);
+  border: 1px solid var(--edge);
+  padding: .6rem .8rem;
+  border-radius: 8px;
+}
+.chat-msg-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: .75rem;
+  color: var(--muted);
+  margin-bottom: .25rem;
+}
+.chat-msg-user {
+  font-weight: 700;
+  color: var(--lcd);
+}
+.chat-input-area {
+  padding: .8rem;
+  background: var(--panel);
+  border-top: 1px solid var(--edge);
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+/* Always Full-Viewport Iframe Player View */
+#v-play.on {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+.playbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: .55rem 1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--edge);
+}
+.playbar-left, .playbar-right {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+#playName {
+  font-size: .95rem;
+  margin-left: .4rem;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.embed-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .4rem 1rem;
+  background: #0d1624;
+  border-bottom: 1px solid #1b314d;
+  font-size: .8rem;
+  color: #b7d7f7;
+}
+.embed-notice a { color: var(--lcd); font-weight: 600; }
+#frameWrap {
+  flex: 1;
+  display: flex;
+  position: relative;
+  background: #000;
+}
+#frame {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--lcd);
+  outline-offset: 2px;
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#home" data-v="home" class="brand">games.de</a>
+  <a class="tab" href="#home" data-v="home">🏠 Home</a>
+  <a class="tab" href="#library" data-v="library">🔍 Library</a>
+  <a class="tab" href="#admin" data-v="admin">➕ Admin</a>
+  <a class="tab" href="#code" data-v="code">⚙️ Manual Code</a>
+  <a class="tab" href="#chat" data-v="chat">💬 AI Chat</a>
+  <button type="button" class="ghost" id="openChatDrawerBtn" style="margin-left:auto; display:none;" hidden>💬 Community Chat</button>
+</nav>
+
+<!-- Discord-style Community Chat Drawer (Hidden for now) -->
+<div id="chatDrawer" hidden>
+  <div class="chat-drawer-header">
+    <span># community-chat</span>
+    <button type="button" class="ghost" id="closeChatDrawerBtn" style="padding:.2rem .5rem;">✕</button>
+  </div>
+  <div class="chat-channels">
+    <button type="button" class="ch-btn active"># general</button>
+    <button type="button" class="ch-btn"># game-talk</button>
+  </div>
+  <div class="chat-messages-area" id="communityMessages">
+    <div class="chat-msg-item">
+      <div class="chat-msg-header"><span class="chat-msg-user">System</span><span>Just now</span></div>
+      <div>Connecting to community chat sheet...</div>
+    </div>
+  </div>
+  <form class="chat-input-area" id="communityChatForm">
+    <input id="chatUser" type="text" placeholder="Your display name" maxlength="25" required style="padding:.4rem .6rem; font-size:.85rem;">
+    <div style="display:flex; gap:.4rem;">
+      <input id="chatText" type="text" placeholder="Message #general..." maxlength="250" required style="flex:1; padding:.4rem .6rem; font-size:.85rem;">
+      <button class="btn" type="submit" style="padding:.4rem .8rem; font-size:.85rem;">Send</button>
+    </div>
+  </form>
+</div>
+
+<section class="view" id="v-home">
+  <div class="hero">
+    <h1>most TUFF unblocked game player, trust</h1>
+    <div class="visits">Your visits <span class="lcd" id="visits">000</span></div>
+  </div>
+  <div class="section">
+    <h2>Recently Played</h2>
+    <div class="grid" id="recent"></div>
+    <p class="empty" id="recentEmpty" hidden>Nothing played yet. Add games in Admin, then open them from Library.</p>
+  </div>
+</section>
+
+<section class="view" id="v-library">
+  <div class="section">
+    <div class="tools">
+      <h2 id="libCount">Library</h2>
+      <input id="filter" type="search" placeholder="Filter games..." aria-label="Filter games">
+    </div>
+    <div class="grid" id="libGrid"></div>
+    <p class="empty" id="libEmpty" hidden></p>
+  </div>
+</section>
+
+<section class="view" id="v-admin">
+  <div class="section">
+    <div id="adminLock">
+      <h2>Admin Access</h2>
+      <form class="box" id="adminUnlockForm" autocomplete="off">
+        <label>Enter Admin Access Code
+          <input id="adminCodeInput" type="password" required placeholder="••••••••••••">
+        </label>
+        <button class="btn" type="submit">Unlock Admin</button>
+        <div class="msg err" id="adminLockMsg" role="status"></div>
+      </form>
+    </div>
+
+    <div id="adminPanel" hidden>
+      <div class="tools">
+        <h2>Google Sheets Database API</h2>
+        <button type="button" class="ghost" id="btnLockAdmin">🔒 Lock Admin</button>
+      </div>
+      <form class="box" id="sheetForm" autocomplete="off">
+        <label>Google Apps Script Web App URL
+          <input id="sheetUrlInput" placeholder="https://script.google.com/macros/s/.../exec">
+        </label>
+        <div style="display:flex;gap:.5rem;align-items:center;">
+          <button class="btn" type="submit">Save & Sync</button>
+          <button type="button" class="ghost" id="btnSyncSheet">↻ Sync Now</button>
+          <button type="button" class="ghost" id="btnUnlinkSheet" style="color:var(--danger)">Unlink</button>
+        </div>
+        <div class="msg" id="sheetMsg" role="status"></div>
+      </form>
+
+      <div class="tools" style="margin-top:2rem;">
+        <h2 id="formTitle">Add a game</h2>
+      </div>
+      <form class="box" id="addForm" autocomplete="off">
+        <input type="hidden" id="editId">
+        <label>Game name<input id="aName" required maxlength="60" placeholder="Deadshot.io"></label>
+        <label>Link<input id="aUrl" required inputmode="url" placeholder="example.com/game"></label>
+        <div style="display:flex;gap:.5rem;">
+          <button class="btn" type="submit" id="saveGameBtn">Add game</button>
+          <button type="button" class="ghost" id="cancelEditBtn" hidden>Cancel Edit</button>
+        </div>
+        <div class="msg" id="aMsg" role="status"></div>
+      </form>
+      <h2>Manage games</h2>
+      <div class="rows" id="manage"></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-code">
+  <div class="section">
+    <h2>Manual Code</h2>
+    <form class="box" id="codeForm" autocomplete="off">
+      <label>Game name<input id="cName" required maxlength="60" placeholder="My HTML game"></label>
+      <label>Paste the game’s HTML code
+        <textarea id="cCode" required spellcheck="false" placeholder="&lt;!DOCTYPE html&gt; ..."></textarea>
+      </label>
+      <button class="btn" type="submit">Save game</button>
+      <div class="msg" id="cMsg" role="status"></div>
+    </form>
+    <p class="empty">Games saved here run inside the page. They appear in your Library like any other game.</p>
+  </div>
+</section>
+
+<section class="view" id="v-chat">
+  <div class="section" style="max-width:800px; display:flex; flex-direction:column; height:calc(100vh - 5rem);">
+    <h2>AI Game Assistant</h2>
+    <div id="chatMessages" style="flex:1; background:var(--card); border:1px solid var(--edge); border-radius:8px; padding:1rem; overflow-y:auto; margin-bottom:1rem; display:flex; flex-direction:column; gap:.8rem;">
+      <div style="align-self:flex-start; background:var(--panel); border:1px solid var(--edge); padding:.6rem 1rem; border-radius:8px; max-width:85%;">
+        Hello! I'm your AI assistant for games.de REBORN. Ask me for game recommendations or help finding unblocked games!
+      </div>
+    </div>
+    <form id="chatForm" style="display:flex; gap:.5rem;">
+      <input id="chatInput" type="text" placeholder="Ask for game recommendations..." autocomplete="off" style="flex:1;">
+      <button class="btn" type="submit" style="white-space:nowrap;">Send</button>
+    </form>
+  </div>
+</section>
+
+<section class="view" id="v-play">
+  <div class="playbar">
+    <div class="playbar-left">
+      <a class="ghost primary" href="#home" data-v="home" id="btnHome">🏠 Return to Main Page</a>
+      <a class="ghost" href="#library" data-v="library" id="btnLib">← Library</a>
+      <strong id="playName"></strong>
+    </div>
+    <div class="playbar-right">
+      <button type="button" class="ghost" id="btnReload" title="Reload game">↻ Reload</button>
+    </div>
+  </div>
+  <div class="embed-notice" id="embedNotice" hidden>
+    <span>If this site blocks embedding (shows a blank or refused screen), you can open it directly:</span>
+    <a id="extLink" href="#" target="_blank" rel="noopener noreferrer">Open in New Tab ↗</a>
+  </div>
+  <div id="frameWrap"></div>
+</section>
+
+<script>
+(function () {
+  var K = 'gamesde-reborn-v3';
+  var ADMIN_CODE = 'jamerreborn777';
+  var adminUnlocked = false;
+  var CHAT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzbKPygTkMmqJo4LYB03wCP_0tdB-QPJ6tDElh6HN_Y9A2VBLMTnfb2wv1YvsRWNfvlKg/exec';
+  var S = { 
+    games: [], 
+    recent: [], 
+    visits: 0, 
+    sheetUrl: 'https://script.google.com/macros/s/AKfycbyGr6_KsVHcJkaczLQPvZCG9gzWijb-Fm-GayySVudAdqTezbVfv4Qk7N1BvVXLEGNx/exec' 
+  };
+  var playing = null;
+  var chatPollTimer = null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function seedDefaults() {
+    S.games = [
+      {
+        id: 'demo-reflex',
+        type: 'code',
+        name: 'Neon Reflex Test',
+        code: '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#090d16;color:#fff;font-family:system-ui,sans-serif;user-select:none;cursor:pointer;text-align:center}h1{font-size:2.4rem;margin:0 0 .5rem}p{color:#94a3b8;font-size:1.1rem}</style></head><body><h1 id="t">Click anywhere to start</h1><p id="s">Test your reaction speed inside the iframe</p><script>let st=0,tm,bg=document.body,t=document.getElementById("t"),s=document.getElementById("s");bg.onclick=()=>{if(st===0||st===3){st=1;bg.style.background="#7f1d1d";t.textContent="Wait for green...";s.textContent="";tm=setTimeout(()=>{st=2;bg.style.background="#15803d";t.textContent="CLICK NOW!";st=performance.now()},1200+Math.random()*2500)}else if(st===1){clearTimeout(tm);st=3;bg.style.background="#090d16";t.textContent="Too early!";s.textContent="Click to try again"}else if(st>10){let ms=Math.round(performance.now()-st);st=3;bg.style.background="#090d16";t.textContent=ms+" ms";s.textContent="Click to play again"}}<\/script></body></html>'
+      }
+    ];
+    save();
+  }
+
+  function syncFromGoogleSheet(silent) {
+    if (!S.sheetUrl) return;
+    fetch(S.sheetUrl)
+      .then(function (res) {
+        if (!res.ok) throw new Error('Network error loading sheet');
+        return res.json();
+      })
+      .then(function (data) {
+        if (Array.isArray(data)) {
+          var remoteGames = data.map(function(item, idx) {
+            return {
+              id: 'sheet-' + idx + '-' + Math.random().toString(36).slice(2, 6),
+              type: 'url',
+              name: String(item.name || '').trim(),
+              url: cleanUrl(String(item.url || ''))
+            };
+          }).filter(function(g) { return g.name && g.url; });
+
+          var codeGames = S.games.filter(function(g) { return g.type === 'code'; });
+          S.games = codeGames.concat(remoteGames);
+          save();
+        }
+        if (!silent && $('sheetMsg')) {
+          $('sheetMsg').className = 'msg';
+          $('sheetMsg').textContent = 'Auto-synced successfully (' + S.games.length + ' games loaded)!';
+        }
+        renderManage();
+        renderLibrary();
+      })
+      .catch(function (err) {
+        if (!silent && $('sheetMsg')) {
+          $('sheetMsg').className = 'msg err';
+          $('sheetMsg').textContent = 'Failed to load from Apps Script endpoint.';
+        }
+      });
+  }
+
+  function pushToGoogleSheet() {
+    if (!S.sheetUrl) return;
+    var urlGames = S.games
+      .filter(function(g) { return g.type === 'url'; })
+      .map(function(g) { return { name: g.name, url: g.url }; });
+
+    fetch(S.sheetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(urlGames)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(result) {
+      if ($('sheetMsg')) {
+        $('sheetMsg').className = 'msg';
+        $('sheetMsg').textContent = 'Sheet updated successfully!';
+      }
+    })
+    .catch(function(err) {
+      if ($('sheetMsg')) {
+        $('sheetMsg').className = 'msg err';
+        $('sheetMsg').textContent = 'Error writing to Google Sheet.';
+      }
+    });
+  }
+
+  function fetchCommunityChat() {
+    if (!CHAT_SHEET_URL) return;
+    fetch(CHAT_SHEET_URL)
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (!Array.isArray(data)) return;
+        var area = $('communityMessages');
+        var wasAtBottom = area.scrollHeight - area.scrollTop <= area.clientHeight + 40;
+        area.textContent = '';
+
+        if (data.length === 0) {
+          var item = document.createElement('div');
+          item.className = 'chat-msg-item';
+          item.innerHTML = '<div class="chat-msg-header"><span class="chat-msg-user">System</span><span>Just now</span></div><div>No messages yet. Be the first to say something!</div>';
+          area.appendChild(item);
+          return;
+        }
+
+        data.forEach(function(m) {
+          var item = document.createElement('div');
+          item.className = 'chat-msg-item';
+          item.innerHTML = '<div class="chat-msg-header"><span class="chat-msg-user">' + escapeHtml(m.user || 'Anonymous') + '</span><span>' + escapeHtml(m.timestamp || '') + '</span></div><div>' + escapeHtml(m.message || '') + '</div>';
+          area.appendChild(item);
+        });
+
+        if (wasAtBottom) {
+          area.scrollTop = area.scrollHeight;
+        }
+      })
+      .catch(function(err) {});
+  }
+
+  function load() {
+    try {
+      var r = JSON.parse(localStorage.getItem(K));
+      if (r && Array.isArray(r.games)) {
+        S.games = r.games;
+        S.recent = Array.isArray(r.recent) ? r.recent : [];
+        S.visits = +r.visits || 0;
+        if (r.sheetUrl !== undefined) S.sheetUrl = r.sheetUrl;
+      } else {
+        seedDefaults();
+      }
+    } catch (e) {
+      seedDefaults();
+    }
+    if (S.sheetUrl) {
+      syncFromGoogleSheet(true);
+    }
+  }
+
+  function save() {
+    try { localStorage.setItem(K, JSON.stringify(S)); } catch (e) {}
+  }
+
+  function uid() {
+    return Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function byId(id) {
+    return S.games.filter(function (g) { return g.id === id; })[0];
+  }
+
+  function cleanUrl(v) {
+    v = String(v || '').trim();
+    if (!v) return null;
+    if (!/^[a-z][a-z0-9+.-]*:/i.test(v)) v = 'https://' + v;
+    try {
+      var u = new URL(v);
+      return /^https?:$/.test(u.protocol) ? u.href : null;
+    } catch (e) { return null; }
+  }
+
+  function hue(s) {
+    var h = 0;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
+    return h;
+  }
+
+  function initials(n) {
+    var w = n.trim().split(/\s+/);
+    return (w.length > 1 ? w[0][0] + w[1][0] : n.trim().slice(0, 2)).toUpperCase();
+  }
+
+  function touch(id) {
+    S.recent = [id].concat(S.recent.filter(function (x) { return x !== id; })).slice(0, 14);
+    save();
+  }
+
+  function tile(g) {
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'tile';
+
+    var art = document.createElement('span');
+    art.className = 'art';
+    art.style.background = 'hsl(' + hue(g.name) + ' 45% 26%)';
+    art.textContent = initials(g.name);
+
+    var badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = g.type === 'url' ? 'WEB' : 'HTML';
+    art.appendChild(badge);
+
+    var cap = document.createElement('span');
+    cap.className = 'cap';
+    cap.textContent = g.name;
+
+    el.appendChild(art);
+    el.appendChild(cap);
+
+    el.addEventListener('click', function () {
+      touch(g.id);
+      play(g);
+    });
+    return el;
+  }
+
+  function renderHome() {
+    var box = $('recent');
+    box.textContent = '';
+    var items = S.recent.map(byId).filter(Boolean);
+    items.forEach(function (g) { box.appendChild(tile(g)); });
+    $('recentEmpty').hidden = items.length > 0;
+    $('visits').textContent = String(S.visits).padStart(3, '0');
+  }
+
+  function renderLibrary() {
+    var q = $('filter').value.trim().toLowerCase();
+    var box = $('libGrid');
+    box.textContent = '';
+    var shown = S.games.filter(function (g) { return !q || g.name.toLowerCase().indexOf(q) !== -1; });
+    shown.forEach(function (g) { box.appendChild(tile(g)); });
+    $('libCount').textContent = S.games.length === 1 ? '1 game' : S.games.length + ' games';
+    var e = $('libEmpty');
+    e.hidden = shown.length > 0;
+    e.textContent = S.games.length ? 'No games match that filter.' : 'No games yet. Add one in Admin or Manual Code.';
+  }
+
+  function renderManage() {
+    $('adminLock').hidden = adminUnlocked;
+    $('adminPanel').hidden = !adminUnlocked;
+    if (!adminUnlocked) return;
+
+    if (S.sheetUrl && $('sheetUrlInput')) {
+      $('sheetUrlInput').value = S.sheetUrl;
+    }
+
+    var box = $('manage'); box.textContent = '';
+    if (!S.games.length) {
+      var p = document.createElement('p');
+      p.className = 'empty';
+      p.textContent = 'Nothing to manage yet.';
+      box.appendChild(p);
+    }
+    S.games.forEach(function (g) {
+      var row = document.createElement('div');
+      row.className = 'row';
+      var s = document.createElement('span');
+      s.textContent = g.name;
+      var sm = document.createElement('small');
+      sm.textContent = g.type === 'url' ? new URL(g.url).hostname.replace(/^www\./, '') : 'Pasted code';
+      s.appendChild(sm);
+
+      var btnGroup = document.createElement('div');
+      btnGroup.style.display = 'flex';
+      btnGroup.style.gap = '.4rem';
+
+      var editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'ghost';
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', function () {
+        $('editId').value = g.id;
+        $('aName').value = g.name;
+        $('aUrl').value = g.url || '';
+        $('formTitle').textContent = 'Edit game: ' + g.name;
+        $('saveGameBtn').textContent = 'Update game';
+        $('cancelEditBtn').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ghost';
+      b.textContent = 'Remove';
+      b.addEventListener('click', function () {
+        S.games = S.games.filter(function (x) { return x.id !== g.id; });
+        S.recent = S.recent.filter(function (x) { return x !== g.id; });
+        save();
+        pushToGoogleSheet();
+        renderManage();
+      });
+
+      btnGroup.appendChild(editBtn);
+      btnGroup.appendChild(b);
+      row.appendChild(s);
+      row.appendChild(btnGroup);
+      box.appendChild(row);
+    });
+  }
+
+  function play(g) {
+    playing = g;
+    navigate('play', g.id);
+  }
+
+  function mountPlayer() {
+    var wrap = $('frameWrap');
+    wrap.textContent = '';
+    if (!playing) {
+      navigate('home');
+      return;
+    }
+
+    $('playName').textContent = playing.name;
+    var f = document.createElement('iframe');
+    f.id = 'frame';
+    f.setAttribute('allow', 'fullscreen; gamepad; autoplay; clipboard-read; clipboard-write');
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('title', playing.name);
+
+    if (playing.type === 'url') {
+      $('embedNotice').hidden = false;
+      $('extLink').href = playing.url;
+      f.src = playing.url;
+    } else {
+      $('embedNotice').hidden = true;
+      f.setAttribute('sandbox', 'allow-scripts allow-pointer-lock allow-forms allow-popups allow-same-origin');
+      f.srcdoc = playing.code;
+    }
+
+    wrap.appendChild(f);
+  }
+
+  var views = ['home', 'library', 'admin', 'code', 'chat', 'play'];
+  function navigate(v, gameId) {
+    if (views.indexOf(v) === -1) v = 'home';
+
+    if (v === 'play') {
+      if (gameId) {
+        var found = byId(gameId);
+        if (found) playing = found;
+      }
+      if (!playing) v = 'home';
+    }
+
+    views.forEach(function (name) {
+      $('v-' + name).classList.toggle('on', name === v);
+    });
+    document.querySelectorAll('nav a.tab').forEach(function (a) {
+      a.classList.toggle('on', a.dataset.v === v);
+    });
+
+    if (v !== 'play') {
+      $('frameWrap').textContent = '';
+    }
+
+    try {
+      var targetHash = v === 'play' && playing ? '#play/' + encodeURIComponent(playing.id) : '#' + v;
+      if (location.hash !== targetHash) {
+        history.replaceState(null, '', targetHash);
+      }
+    } catch (e) {}
+
+    if (v === 'home') renderHome();
+    if (v === 'library') renderLibrary();
+    if (v === 'admin') renderManage();
+    if (v === 'play') mountPlayer();
+    window.scrollTo(0, 0);
+  }
+
+  function routeFromHash() {
+    var raw = location.hash.slice(1);
+    var parts = raw.split('/');
+    var v = parts[0] || 'home';
+    var id = parts[1] ? decodeURIComponent(parts[1]) : null;
+    navigate(v, id);
+  }
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-v]');
+    if (!trigger) return;
+    e.preventDefault();
+    navigate(trigger.dataset.v);
+  });
+
+  // Community Chat Drawer toggles & live sync
+  $('openChatDrawerBtn').addEventListener('click', function() {
+    $('chatDrawer').classList.add('open');
+    fetchCommunityChat();
+    if (!chatPollTimer) {
+      chatPollTimer = setInterval(fetchCommunityChat, 5000);
+    }
+  });
+  $('closeChatDrawerBtn').addEventListener('click', function() {
+    $('chatDrawer').classList.remove('open');
+    if (chatPollTimer) {
+      clearInterval(chatPollTimer);
+      chatPollTimer = null;
+    }
+  });
+
+  $('communityChatForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var user = $('chatUser').value.trim() || 'Anonymous';
+    var text = $('chatText').value.trim();
+    if (!text) return;
+
+    var payload = { user: user, message: text };
+    fetch(CHAT_SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function() {
+      $('chatText').value = '';
+      fetchCommunityChat();
+    })
+    .catch(function(err) {});
+  });
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  $('adminUnlockForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var code = $('adminCodeInput').value.trim();
+    if (code === ADMIN_CODE) {
+      adminUnlocked = true;
+      $('adminCodeInput').value = '';
+      $('adminLockMsg').textContent = '';
+      renderManage();
+    } else {
+      $('adminLockMsg').textContent = 'Invalid access code.';
+      $('adminCodeInput').select();
+    }
+  });
+
+  $('btnLockAdmin').addEventListener('click', function () {
+    adminUnlocked = false;
+    renderManage();
+  });
+
+  $('sheetForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var val = $('sheetUrlInput').value.trim();
+    if (!val) return;
+    S.sheetUrl = val;
+    save();
+    $('sheetMsg').className = 'msg';
+    $('sheetMsg').textContent = 'Connecting to Google Apps Script...';
+    syncFromGoogleSheet(false);
+  });
+
+  $('btnSyncSheet').addEventListener('click', function () {
+    if (!S.sheetUrl) {
+      $('sheetMsg').className = 'msg err';
+      $('sheetMsg').textContent = 'No Apps Script URL configured.';
+      return;
+    }
+    $('sheetMsg').className = 'msg';
+    $('sheetMsg').textContent = 'Syncing...';
+    syncFromGoogleSheet(false);
+  });
+
+  $('btnUnlinkSheet').addEventListener('click', function () {
+    S.sheetUrl = '';
+    save();
+    if ($('sheetUrlInput')) $('sheetUrlInput').value = '';
+    $('sheetMsg').className = 'msg';
+    $('sheetMsg').textContent = 'Unlinked endpoint.';
+    renderManage();
+  });
+
+  $('cancelEditBtn').addEventListener('click', function () {
+    $('editId').value = '';
+    $('addForm').reset();
+    $('formTitle').textContent = 'Add a game';
+    $('saveGameBtn').textContent = 'Add game';
+    $('cancelEditBtn').hidden = true;
+  });
+
+  $('addForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!adminUnlocked) return;
+    var url = cleanUrl($('aUrl').value);
+    if (!url) { $('aMsg').textContent = 'Enter a valid web address.'; return; }
+    var name = $('aName').value.trim();
+    var editId = $('editId').value;
+
+    if (editId) {
+      var target = byId(editId);
+      if (target) {
+        target.name = name;
+        target.url = url;
+        $('aMsg').textContent = 'Updated ' + name + '!';
+      }
+      $('editId').value = '';
+      $('formTitle').textContent = 'Add a game';
+      $('saveGameBtn').textContent = 'Add game';
+      $('cancelEditBtn').hidden = true;
+    } else {
+      S.games.unshift({ id: uid(), type: 'url', name: name, url: url });
+      $('aMsg').textContent = 'Added ' + name + '!';
+    }
+
+    save();
+    pushToGoogleSheet();
+    e.target.reset();
+    renderManage();
+  });
+
+  $('codeForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('cName').value.trim();
+    var code = $('cCode').value.trim();
+    var asUrl = /^https?:\/\/\S+$/i.test(code) ? cleanUrl(code) : null;
+    S.games.unshift(asUrl ? { id: uid(), type: 'url', name: name, url: asUrl } : { id: uid(), type: 'code', name: name, code: code });
+    save();
+    e.target.reset();
+    $('cMsg').textContent = 'Saved ' + name + ' to your Library.';
+  });
+
+  $('chatForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var inputEl = $('chatInput');
+    var prompt = inputEl.value.trim();
+    if (!prompt) return;
+    inputEl.value = '';
+
+    var chatBox = $('chatMessages');
+    var userBubble = document.createElement('div');
+    userBubble.style.cssText = 'align-self:flex-end; background:var(--accent); color:var(--accent-ink); padding:.6rem 1rem; border-radius:8px; max-width:85%;';
+    userBubble.textContent = prompt;
+    chatBox.appendChild(userBubble);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    var aiBubble = document.createElement('div');
+    aiBubble.style.cssText = 'align-self:flex-start; background:var(--panel); border:1px solid var(--edge); padding:.6rem 1rem; border-radius:8px; max-width:85%;';
+    aiBubble.textContent = 'Thinking...';
+    chatBox.appendChild(aiBubble);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+      var systemPrompt = "You are a helpful AI gaming assistant for games.de REBORN, an unblocked web game platform. Help users find unblocked games, suggest titles, or discuss gameplay.";
+      var apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=';
+      var payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] }
+      };
+
+      var res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var result = await res.json();
+      var candidate = result.candidates?.[0];
+      if (candidate && candidate.content?.parts?.[0]?.text) {
+        aiBubble.textContent = candidate.content.parts[0].text;
+      } else {
+        aiBubble.textContent = 'Sorry, I could not generate a response right now.';
+      }
+    } catch (err) {
+      aiBubble.textContent = 'Error communicating with the AI service.';
+    }
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  $('btnReload').addEventListener('click', function () {
+    if (playing) mountPlayer();
+  });
+
+  $('filter').addEventListener('input', renderLibrary);
+  window.addEventListener('hashchange', routeFromHash);
+
+  load();
+  S.visits++;
+  save();
+  routeFromHash();
+})();
+</script>
+</body>
+</html>
